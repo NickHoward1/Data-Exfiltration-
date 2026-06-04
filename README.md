@@ -83,3 +83,86 @@ This investigation improved my understanding of DNS traffic analysis, packet ins
 <li>Unusual response behavior: frequent NXDOMAIN (if attacker uses exfil-by-query without answering), or TCP/large UDP fragments for DNS.</li>
 <li>Queries at regular intervals (beaconing behaviour).</li>
 </ul>
+
+
+
+
+
+<h1>Data Exfiltration Through File Transfer Protocol</h1>
+
+<h2>Objective</h2>
+
+
+<h2>Scenario</h2>
+
+
+<h2>Tools Used</h2>
+<ul>
+  <li>Wireshark</li>
+  <li>Packet Capture (PCAP)</li>
+  <li>Threat Hunting Methodology</li>
+</ul>
+
+<h2>Investigation Process</h2>
+
+Step 1 - Detecting through Wireshark
+
+Filter1: `ftp || ftp-data` This filter will alow me filter for ftp sessions and isolate the ftp control traffic.
+Filter2: `ftp.request.command == "USER" || ftp.request.command == "PASS"` from the output, we can look for suspicious usernames or weak passwords.
+Filter3: `ftp contains "STOR"` searches for ftp packets containing the command:STOR, It's an FTP command used to upload a file from the client to the FTP server.
+Filter4: `ftp contains "csv"` I can look at suspicious files by filtering on the file extensions like PDF, csv, TXT etc.
+Filter5: `ftp && frame.len > 90` then `Packet - Follow - TCP stream`
+
+<img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<h2>Findings</h2>
+
+
+
+<h2>Indicators of Compromise</h2>
+
+<ul>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
+
+<h2>MITRE ATT&CK Mapping</h2>
+<ul>
+ <li></li>
+ <li></li>
+</ul>
+
+<h2>Recommendations</h2>
+
+<b>Confirm the incident</b><br>
+<b>Escalate</b><br>
+<b>Contain</b>
+<li>Block domain</li>
+<li>Block IP</li>
+<li>Isolate device</li>
+<b>Eradicate</b>
+<li>AV scan</li>
+<li>Remove malware</li>
+<li>Reset credentials if needed</li>
+<b>Recovery</b><br>
+<b>Lessons Learned</b><br>
+
+<h2>Lessons Learned</h2>
+
+
+<h2>Indicators of attack</h2> 
+
+<b>How adversaries use FTP for exfiltration:</b><br>
+Use legitimate FTP servers (public or misconfigured internal servers) to stage/transfer data.<br>
+Use compromised credentials (service accounts, user creds).<br>
+Use non-standard ports or tunneling to blend with other traffic.<br>
+
+<ul>
+<li>USER and PASS commands (cleartext credentials).</li>
+<li>STOR (upload) and RETR (download) commands: repeated or large transfers.</li>
+<li>Large data connections to unusual external IPs, especially outside business hours.</li>
+<li>Data channel openings on ephemeral ports (PASV) paired with large payloads.</li>
+</ul>
+
