@@ -56,7 +56,7 @@ With the following indicators, we were able to identify the data exfiltration at
 <h2>Recommendations</h2>
 
 <b>Confirm the incident</b><br>
-<b>Escalate</b><br>
+<b>Escalate</b>
 <b>Contain</b>
 <li>Block domain</li>
 <li>Block IP</li>
