@@ -16,26 +16,38 @@ An alert was raised regarding abnormal DNS traffic. The objective was to analyse
 
 <h2>Investigation Process</h2>
 
-Step 1 - 
+Step 1 - Detecting through Wireshark
 
-Step 2 - 
+Filter1: `dns` 
+Filter2: `dns.flags.response == 0` (This filter show me all the DNS outbound requests)
+Filter3: `dns && frame.len > 70` to identify DNS packets larger than typical DNS requests.
+Filter4: `dns && dns.qry.name contains Tunnelcorp.net` (This shows all the DNS requests coming from a suspicious domain name)
 
-Step 3 - 
+Step 2 - Detecting through Splunk
 
-Step 4 -
+Filter1: `index=data_exfil sourcetype=DNS_logs` (These are filter that show the logs for this lab) <b>Note:</b> In the DNS logs, we need to look at the suspicious looking domains with a huge query count from multiple hosts or from one host (suspicious if the domain is untrusted). 
+Filter2: `index="data_exfil" sourcetype="DNS_logs" | stats count by src_ip` this filter let's me run the following search query to display the stats of DNS queries generated per source IP.
+Filter3: `index="data_exfil" sourcetype="dns_logs" | stats count by query | sort -count` this query will display any odd looking DNS queries. What to look for: single hosts generating far more DNS requests than normal.
+Filter4: `index="data_exfil" sourcetype="DNS_logs" | where len(query) > 30`
 
 <h2>Findings</h2>
+
+With the following indicators, we were able to identify the data exfiltration attempts through DNS tunneling: A Large number of DNS requests with no response. Large length of the DNS query.
 
 <h2>Indicators of Compromise</h2>
 
 <ul>
-  <li></li>
-  <li></li>
-  <li>)</li>
-  <li></li>
+  <li>Multiple internal hosts are compromised.</li>
+  <li>Large length of the DNS query.</li>
+  <li>There is only one external domain identified as the one receiving the DNS queries.</li>
+  <li>A Large number of DNS requests with no response.</li>
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
+<ul>
+ <li>T1048 – Exfiltration Over Alternative Protocol</li>
+ <li>T1071.004 – Application Layer Protocol: DNS</li>
+</ul>
 
 <h2>Recommendations</h2>
 
