@@ -113,7 +113,7 @@ Filter3: `ftp contains "STOR"` searches for ftp packets containing the command:S
 Filter4: `ftp contains "csv"` I can look at suspicious files by filtering on the file extensions like PDF, csv, TXT etc.
 Filter5: `ftp && frame.len > 90` then `Packet - Follow - TCP stream`
 
-<img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/f337f3581073019f75ef0225123a0b903349e24e/Screenshot%202026-06-04%20at%2014.24.34.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <h2>Findings</h2>
 
