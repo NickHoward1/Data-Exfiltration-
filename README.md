@@ -58,16 +58,16 @@ With the following indicators, we were able to identify the data exfiltration at
 <b>Confirm the incident</b><br>
 <b>Escalate</b><br>
 <b>Contain</b><br>
-</li>Block domain</li><br>
-</li>Block IP<</li>br>
+<li>Block domain</li><br>
+<li>Block IP</li>br>
 <b>Isolate device</b><br>
 <b>Investigate scope</b><br>
 <li>What data was taken?</li><br>
-</li>Which users/devices are affected?</li><br>
+<li>Which users/devices are affected?</li><br>
 <b>Eradicate</b><br>
-</li>AV scan</li><br>
-</li>Remove malware</li><br>
-</li>Reset credentials if needed</li><br>
+<li>AV scan</li><br>
+<li>Remove malware</li><br>
+<li>Reset credentials if needed</li><br>
 <b>Recovery</b><br>
 <b>Lessons Learned</b><br>
 
