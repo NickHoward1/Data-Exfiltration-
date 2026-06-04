@@ -113,45 +113,39 @@ Filter3: `ftp contains "STOR"` searches for ftp packets containing the command:S
 Filter4: `ftp contains "csv"` I can look at suspicious files by filtering on the file extensions like PDF, csv, TXT etc.
 Filter5: `ftp && frame.len > 90` then `Packet - Follow - TCP stream`
 
-<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/f337f3581073019f75ef0225123a0b903349e24e/Screenshot%202026-06-04%20at%2014.24.34.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/1735e2184bb57744216d3c60b3970544e31c9651/Screenshot%202026-06-04%20at%2014.27.47.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/f337f3581073019f75ef0225123a0b903349e24e/Screenshot%202026-06-04%20at%2014.24.34.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/1735e2184bb57744216d3c60b3970544e31c9651/Screenshot%202026-06-04%20at%2014.27.47.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/24d9cf6bb0fb5596a16787d11e733c5672f7eb9f/Screenshot%202026-06-04%20at%2014.33.28.png" width="300" height="300"/> 
 
 <h2>Findings</h2>
 
-Internal passwords are being exfiltrated via STOR customer_data.xlsx
-Customer Data is being exfiltrated via 
+Internal passwords are being exfiltrated via STOR internal_passwords.csv
+Customer Data is being exfiltrated via STOR customer_data.xlsx
 
 <h2>Indicators of Compromise</h2>
 
 <ul>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
+  <li>I found suspicious CSV files within the PCAP</li>
+  <li>Anomalies in Filenames or Credentials</li>
+  <li>suspicious IP connected as Guest account has transferred some sensitive csv files to a supicious external IP</li>
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
 <ul>
- <li></li>
- <li></li>
+ <li>T1048 – Exfiltration Over Alternative Protocol</li>
+ <li>TA0010 – Exfiltration</li>
 </ul>
 
 <h2>Recommendations</h2>
 
-<b>Confirm the incident</b><br>
-<b>Escalate</b><br>
-<b>Contain</b>
-<li>Block domain</li>
-<li>Block IP</li>
-<li>Isolate device</li>
-<b>Eradicate</b>
-<li>AV scan</li>
-<li>Remove malware</li>
-<li>Reset credentials if needed</li>
-<b>Recovery</b><br>
-<b>Lessons Learned</b><br>
+Validate whether the FTP destination is authorised.
+Identify the user and host responsible for the upload.
+Review transferred filenames and data volume.
+Block the FTP destination if malicious.
+Isolate affected endpoint if compromise is suspected.
+Escalate according to incident response procedures.
+Perform additional investigation for malware or credential compromise.
 
 <h2>Lessons Learned</h2>
-
+I've learnt to check for large frames, and commands such as STOR, using various filters to retrieve the data i need for a TP for data exfiltration via FTP. 
 
 <h2>Indicators of attack</h2> 
 
