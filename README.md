@@ -36,7 +36,7 @@ Filter4: `index="data_exfil" sourcetype="DNS_logs" | where len(query) > 30`<br>
 
 <h2>Findings</h2>
 
-With the following indicators, we were able to identify the data exfiltration attempts through DNS tunneling: A Large number of DNS requests with no response. Large length of the DNS query.
+I identify the data exfiltration attempts through DNS tunneling: A Large number of DNS requests with no response. Large length of the DNS query.
 
 <h2>Indicators of Compromise</h2>
 
@@ -74,7 +74,7 @@ This investigation improved my understanding of DNS traffic analysis, packet ins
 
 <h2>Indicators of attack</h2> 
 
-<b>When analysing DNS traffic for possible indicators of data exfiltration, we should look for:</b>
+<b>When analysing DNS traffic for possible indicators of data exfiltration, look for:</b>
 <ul>
 <li>Many DNS queries are sent to a single external domain, especially with very high counts compared to the baseline.</li>
 <li>Long subdomain labels or unusually long full query names (> 60–100 characters).</li>
@@ -83,9 +83,6 @@ This investigation improved my understanding of DNS traffic analysis, packet ins
 <li>Unusual response behavior: frequent NXDOMAIN (if attacker uses exfil-by-query without answering), or TCP/large UDP fragments for DNS.</li>
 <li>Queries at regular intervals (beaconing behaviour).</li>
 </ul>
-
-
-
 
 
 <h1>Data Exfiltration Through FTP</h1>
