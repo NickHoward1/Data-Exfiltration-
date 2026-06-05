@@ -18,19 +18,19 @@ An alert was raised regarding abnormal DNS traffic. The objective was to analyse
 
 Step 1 - Detecting through Wireshark
 
-Filter1: `dns` 
-Filter2: `dns.flags.response == 0` (This filter show me all the DNS outbound requests)
-Filter3: `dns && frame.len > 70` to identify DNS packets larger than typical DNS requests.
-Filter4: `dns && dns.qry.name contains Tunnelcorp.net` (This shows all the DNS requests coming from a suspicious domain name)
+Filter1: `dns` <br>
+Filter2: `dns.flags.response == 0` (This filter show me all the DNS outbound requests)<br>
+Filter3: `dns && frame.len > 70` to identify DNS packets larger than typical DNS requests.<br>
+Filter4: `dns && dns.qry.name contains Tunnelcorp.net` (This shows all the DNS requests coming from a suspicious domain name)<br>
 
 <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/0209c2e130cf154ef6ad4d6bdcf1cfa375097eaf/Screenshot%202026-06-04%20at%2011.35.11.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 Step 2 - Detecting through Splunk
 
-Filter1: `index=data_exfil sourcetype=DNS_logs` (These are filter that show the logs for this lab) <b>Note:</b> In the DNS logs, we need to look at the suspicious looking domains with a huge query count from multiple hosts or from one host (suspicious if the domain is untrusted). 
-Filter2: `index="data_exfil" sourcetype="DNS_logs" | stats count by src_ip` this filter let's me run the following search query to display the stats of DNS queries generated per source IP.
-Filter3: `index="data_exfil" sourcetype="dns_logs" | stats count by query | sort -count` this query will display any odd looking DNS queries. What to look for: single hosts generating far more DNS requests than normal.
-Filter4: `index="data_exfil" sourcetype="DNS_logs" | where len(query) > 30`
+Filter1: `index=data_exfil sourcetype=DNS_logs` (These are filter that show the logs for this lab) <b>Note:</b> In the DNS logs, we need to look at the suspicious looking domains with a huge query count from multiple hosts or from one host (suspicious if the domain is untrusted). <br>
+Filter2: `index="data_exfil" sourcetype="DNS_logs" | stats count by src_ip` this filter let's me run the following search query to display the stats of DNS queries generated per source IP.<br>
+Filter3: `index="data_exfil" sourcetype="dns_logs" | stats count by query | sort -count` this query will display any odd looking DNS queries. What to look for: single hosts generating far more DNS requests than normal.<br>
+Filter4: `index="data_exfil" sourcetype="DNS_logs" | where len(query) > 30`<br>
 
 <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/c79f3433275bf8896e5b595f6bb7a092678d4f58/Screenshot%202026-06-04%20at%2011.55.09.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/064982aaf68e52ab7ce2cd32ea5f36bd7df64b2e/Screenshot%202026-06-04%20at%2012.21.57.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -244,30 +244,31 @@ Suspicious outbound HTTP traffic has been detected between an internal host and 
 
 Step 1 - Check logs for suspicious activity in Splunk
 
-Filter1: `index="data_exfil" sourcetype="http_logs"` this searches for the logs that were ingested into Splunk for this project. 
-Filter2: `index="data_exfil" sourcetype="http_logs" method=POST` 
-Filter3: `index="data_exfil" sourcetype="http_logs" method=POST | stats count avg(bytes_sent) max(bytes_sent) min(bytes_sent) by domain | sort - count`
-Filter4: `index="data_exfil" sourcetype="http_logs" method=POST bytes_sent > 600 | table _time src_ip uri domain dst_ip bytes_sent | sort - bytes_sent`
+Filter1: `index="data_exfil" sourcetype="http_logs"` this searches for the logs that were ingested into Splunk for this project. <br>
+Filter2: `index="data_exfil" sourcetype="http_logs" method=POST` <br>
+Filter3: `index="data_exfil" sourcetype="http_logs" method=POST | stats count avg(bytes_sent) max(bytes_sent) min(bytes_sent) by domain | sort - count`<br>
+Filter4: `index="data_exfil" sourcetype="http_logs" method=POST bytes_sent > 600 | table _time src_ip uri domain dst_ip bytes_sent | sort - bytes_sent`<br>
 
 <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/e1f45244c17ddd621f950c68866231baf10468dd/Screenshot%202026-06-05%20at%2008.35.53.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 
 Step 2 - Check for suspicious network traffic in Wireshark
 
-Filter1: `http`
-Filter2: `http.request.method == "POST"`
-Filter3: `http.request.method == "POST" and frame.len > 500` This bring back POST requests and frames larger than 500, there was to much noise over 1600 packets displayed so to reduce this I increased the frame size to 750
-Filter4: `http.request.method == "POST" and frame.len > 750` This brought back one packet, after following the process of `packet - follow - HTTP stream` gave me the info on data that has been exfiltrated which is the (Internal Access Credentials - Finance Department)
+Filter1: `http`<br>
+Filter2: `http.request.method == "POST"`<br>
+Filter3: `http.request.method == "POST" and frame.len > 500` This bring back POST requests and frames larger than 500, there was to much noise over 1600 packets displayed so to reduce this I increased the frame size to 750<br>
+Filter4: `http.request.method == "POST" and frame.len > 750` This brought back one packet, after following the process of `packet - follow - HTTP stream` gave me the info on data that has been exfiltrated which is the (Internal Access Credentials - Finance Department)<br>
 
 <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/298c5dea94192c5308686fd1aacc7ed6799400be/Screenshot%202026-06-05%20at%2007.36.54.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/e5cc6ab5a20eaa6dc8c695bfe91f934d2e7522f5/Screenshot%202026-06-05%20at%2007.39.43.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <h2>Findings</h2>
 
+After checking the network traffic and logs in Splunk, it is clear that data has been exfiltrated, this was disguised via HTTP through POST requests, we had to filter out the noise and benign activity to get find the right packet containing the Finance Department credentials. 
+
 <h2>Indicators of Compromise</h2>
 
 <ul>
-  <li></li>
-  <li></li>
-  <li></li>
+  <li>Unusually large HTTP POST requests to external/unexpected hosts.</li>
+  <li><Large bytes being sent over the network/li>
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
@@ -278,8 +279,16 @@ T1071.001 – Application Layer Protocol: Web Protocols
 
 <h2>Recommendations</h2>
 
+Escalate the incident in accordance with incident response procedures.<br>
+Block the malicious domain or IP address if confirmed malicious.<br>
+Isolate affected endpoints if compromise is suspected.<br>
+Investigate for malware, web shells, or unauthorised tools.<br>
+Reset compromised credentials if required.<br>
+Document findings and support remediation and recovery efforts.<br>
+
 <h2>Lessons Learned</h2>
 
+This investigation improved my knowledge on how attackers abuse the HTTP protocol to disguise and exfiltrate data. During the investigation, I learned how to identify indicators of data exfiltration by analysing HTTP requests, reviewing outbound network connections, and investigating large volumes of data being transferred to external destinations. I also gained experience using Wireshark filters to isolate suspicious HTTP traffic and distinguish legitimate business communications from potentially malicious activity.
 
 <h2>Indicators of attack</h2> 
 
