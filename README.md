@@ -181,25 +181,23 @@ Unusual ICMP traffic has been detected between an internal host and an external 
 
 <h2>Investigation Process</h2>
 
-Step 1 
+Step 1 - Looking for large payloads within the network traffic anything larger than 70 bytes is suspicious.
 
 Filter1: `icmp` - The filter below isolates all ICMP packets. Look for unusually frequent or large ICMP Echo Requests/Replies.<br>
 Filter2: `icmp.type == 8` - this filter isolates ICMP Echo Request packets<br>
 Filter3: `icmp.type == 8 and frame.len > 100 this filter on the ICMP requests and focus on the frame length over 100<br>
 
-<img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/011afd419d1aa86ad34c86798314e180496c81e8/Screenshot%202026-06-05%20at%2010.25.39.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <h2>Findings</h2>
 
 Flags packets with unusually large payloads. Normal pings are ~74 bytes total. Anything over 100 is suspicious.
 
-ICMP is simple, and any anomaly can be detected easily by examining the frame size and investigating the larger payload size than usual.
-
 <h2>Indicators of Compromise</h2>
 
 <ul>
   <li>Packets that show large payloads</li>
-  <li>Pings over 100 bytes</li>
+  <li>Echo Pings over 70 bytes</li>
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
@@ -217,7 +215,7 @@ Document findings and support remediation activities.<br>
 
 <h2>Lessons Learned</h2>
 
-
+After carrying out the investigation in Wireshark i spotted large payloads using the ICMP protocol using echo ping request. This is an indicatior that data is being exfiltrated. 
 
 <h2>Indicators of attack</h2> 
 
