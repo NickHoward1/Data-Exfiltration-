@@ -265,8 +265,8 @@ Filter5:
 
 <h2>MITRE ATT&CK Mapping</h2>
 
-TA0010 – Exfiltration
-T1041 – Exfiltration Over C2 Channel
+TA0010 – Exfiltration<br>
+T1041 – Exfiltration Over C2 Channel<br>
 T1071.001 – Application Layer Protocol: Web Protocols
 
 <h2>Recommendations</h2>
