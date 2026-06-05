@@ -129,10 +129,10 @@ Customer Data is being exfiltrated via STOR customer_data.xlsx
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
-<ul>
- <li>T1048 – Exfiltration Over Alternative Protocol</li>
- <li>TA0010 – Exfiltration</li>
-</ul>
+
+ T1048 – Exfiltration Over Alternative Protocol
+ TA0010 – Exfiltration
+
 
 <h2>Recommendations</h2>
 
@@ -204,10 +204,10 @@ Filter5:
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
-<ul>
- <li>T1048 – Exfiltration Over Alternative Protocol</li>
- <li>TA0010 – Exfiltration</li>
-</ul>
+
+ T1048 – Exfiltration Over Alternative Protocol
+ TA0010 – Exfiltration
+
 
 <h2>Recommendations</h2>
 
@@ -229,10 +229,10 @@ Filter5:
 <h1>Data Exfiltration Through HTTP</h1>
 
 <h2>Objective</h2>
-
+Investigate suspicious HTTP traffic to determine whether sensitive data is being exfiltrated from the network through HTTP communications. Identify the affected host, destination server, transferred data, and assess the potential impact to the organisation. Determine whether the activity is legitimate business traffic or malicious data exfiltration.
 
 <h2>Scenario</h2>
-
+Suspicious outbound HTTP traffic has been detected between an internal host and an external web server. Analysis indicates a large volume of data being transferred over HTTP, which may represent unauthorised data exfiltration.
 
 <h2>Tools Used</h2>
 <ul>
@@ -264,10 +264,10 @@ Filter5:
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
-<ul>
- <li>T1048 – Exfiltration Over Alternative Protocol</li>
- <li>TA0010 – Exfiltration</li>
-</ul>
+
+TA0010 – Exfiltration
+T1041 – Exfiltration Over C2 Channel
+T1071.001 – Application Layer Protocol: Web Protocols
 
 <h2>Recommendations</h2>
 
@@ -277,9 +277,27 @@ Filter5:
 <h2>Indicators of attack</h2> 
 
 <ul>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
+<li>Unusually large HTTP POST requests to external/unexpected hosts.</li>
+<li>HTTP requests to domains with low reputation / rarely seen in baseline traffic.</li>
+<li>Frequent small requests (beaconing) to the same host, followed by large uploads.</li>
+<li>Chunked or multipart transfers where multiple requests compose a larger file.</li>
 </ul>
 
+<h3>How adversaries use HTTP for data exfiltration</h3>
+
+<ul>
+<li>POST uploads to external servers: Bulk data is sent to attacker-controlled hosts or cloud storage in POST request bodies.</li>
+<li>GET requests with encoded data: Attacker squeezes small chunks into query strings or path segments (useful for low-and-slow exfiltration).</li>
+<li>Use of common services / CDN: Exfiltration disguised as uploads to popular services or attacker-controlled subdomains under reputable domains.</li>
+<li>Custom headers: Data placed in headers (e.g., X-Data: <base64>) may bypass some string-based DLP.</li>
+<li>Chunked transfer / multipart: Large payloads split into multiple requests to avoid size thresholds.</li>
+<li>HTTPS/TLS tunneling: The encrypted channel hides the payload; detection requires TLS inspection, SNI analysis, or metadata-based detection.</li>
+<li>Staging via cloud services: The attacker uploads to Dropbox/GitHub/Gist and then fetches externally.</li>
+</ul>
+
+<b>Why it matters</b>
+<ul>
+<li>HTTP is very common; attackers hide exfiltration in the noise of legitimate web usage.</li>
+<li>Successful detection stops data breaches and helps trace attacker activity post-compromise.</li>
+<li>Organizations must detect and respond to protect sensitive data and meet compliance requirements.</li>
+</ul>
