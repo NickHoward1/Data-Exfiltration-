@@ -48,10 +48,10 @@ I identify the data exfiltration attempts through DNS tunneling: A Large number 
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
-<ul>
- <li>T1048 – Exfiltration Over Alternative Protocol</li>
- <li>T1071.004 – Application Layer Protocol: DNS</li>
-</ul>
+
+T1048 – Exfiltration Over Alternative Protocol
+T1071.004 – Application Layer Protocol: DNS
+
 
 <h2>Recommendations</h2>
 
@@ -242,9 +242,6 @@ Persistent ICMP sessions to an external host not used for legitimate monitoring.
 Unusually large ICMP payloads or frequent ICMP with payload > typical ping size.<br>
 ICMP payloads that contain high-entropy data or patterns consistent with base64/hex.<br>
 Bursts of ICMP are immediately followed by no other legitimate application traffic from the same host.<br>
-
-
-
 
 
 
