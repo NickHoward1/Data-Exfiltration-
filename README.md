@@ -167,10 +167,10 @@ Use non-standard ports or tunneling to blend with other traffic.<br>
 <h1>Data Exfiltration Through ICMP</h1>
 
 <h2>Objective</h2>
-
+Investigate suspicious ICMP traffic to determine whether the ICMP protocol is being abused to exfiltrate data from the network. Identify the affected host, destination IP address, data transfer patterns, and assess the potential impact to the organisation.
 
 <h2>Scenario</h2>
-
+Unusual ICMP traffic has been detected between an internal host and an external IP address. Analysis indicates an abnormal volume of ICMP packets and payload sizes that may suggest the ICMP protocol is being used as a covert channel for data exfiltration.
 
 <h2>Tools Used</h2>
 <ul>
@@ -183,22 +183,23 @@ Use non-standard ports or tunneling to blend with other traffic.<br>
 
 Step 1 
 
-Filter1: 
-Filter2: 
-Filter3: 
-Filter4: 
-Filter5: 
+Filter1: `icmp` - The filter below isolates all ICMP packets. Look for unusually frequent or large ICMP Echo Requests/Replies.<br>
+Filter2: `icmp.type == 8` - this filter isolates ICMP Echo Request packets<br>
+Filter3: `icmp.type == 8 and frame.len > 100 this filter on the ICMP requests and focus on the frame length over 100<br>
 
 <img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <h2>Findings</h2>
 
+Flags packets with unusually large payloads. Normal pings are ~74 bytes total. Anything over 100 is suspicious.
+
+ICMP is simple, and any anomaly can be detected easily by examining the frame size and investigating the larger payload size than usual.
+
 <h2>Indicators of Compromise</h2>
 
 <ul>
-  <li></li>
-  <li></li>
-  <li></li>
+  <li>Packets that show large payloads</li>
+  <li>Pings over 100 bytes</li>
 </ul>
 
 <h2>MITRE ATT&CK Mapping</h2>
@@ -206,20 +207,48 @@ Filter5:
  T1048 – Exfiltration Over Alternative Protocol
  TA0010 – Exfiltration
 
-
 <h2>Recommendations</h2>
+Escalate the incident in accordance with incident response procedures.<br>
+Block communication to the malicious IP address.<br>
+Isolate affected endpoints if compromise is suspected.<br>
+Investigate the originating process responsible for generating ICMP traffic.<br>
+Conduct malware and endpoint analysis.<br>
+Document findings and support remediation activities.<br>
 
 <h2>Lessons Learned</h2>
 
 
+
 <h2>Indicators of attack</h2> 
 
+<h3>Indicators of attack in Wireshark</h3> 
+
 <ul>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
+<li>CMP packet volumes: a single host sending many ICMP echo requests to an external IP.</li>
+<li>Large frame.len or icmp.payload: pings with payloads much larger than typical (e.g., > 64 bytes).</li>
+<li>ICMP type/code unusual values: e.g., unusual use of timestamp(13/14) or custom codes.</li>
+<li>Regular timing (periodicity): evenly spaced ICMP packets carrying similar-sized payloads.</li>
+<li>Fragments with reassembly: multiple ICMP fragments from the same src/dst pair.</li>
 </ul>
+
+<b>How adversaries use ICMP for exfiltration</b>
+
+Common techniques:
+
+ICMP echo (type 8) / reply (type 0) tunneling: attackers place encoded (base64, hex) chunks of files inside ICMP payloads. <br>
+The remote server collects and decodes them.<br>
+Custom ICMP types/codes: using uncommon ICMP types or non-zero codes to avoid signature-based detections. <br>
+Fragmentation and reassembly: large payloads are split across multiple packets.<br>
+Encryption/obfuscation: Encrypting or encrypting payloads (base64 is common) to look like random data.<br>
+
+Indicators that something may be malicious:
+
+Persistent ICMP sessions to an external host not used for legitimate monitoring.<br>
+Unusually large ICMP payloads or frequent ICMP with payload > typical ping size.<br>
+ICMP payloads that contain high-entropy data or patterns consistent with base64/hex.<br>
+Bursts of ICMP are immediately followed by no other legitimate application traffic from the same host.<br>
+
+
 
 
 
