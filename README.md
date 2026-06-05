@@ -164,8 +164,6 @@ Use non-standard ports or tunneling to blend with other traffic.<br>
 
 
 
-
-
 <h1>Data Exfiltration Through ICMP</h1>
 
 <h2>Objective</h2>
@@ -237,21 +235,30 @@ Suspicious outbound HTTP traffic has been detected between an internal host and 
 <h2>Tools Used</h2>
 <ul>
   <li>Wireshark</li>
+  <li>Splunk</li>
   <li>Packet Capture (PCAP)</li>
   <li>Threat Hunting Methodology</li>
 </ul>
 
 <h2>Investigation Process</h2>
 
-Step 1 
+Step 1 - Check logs for suspicious activity in Splunk
 
-Filter1: 
-Filter2: 
-Filter3: 
-Filter4: 
-Filter5: 
+Filter1: `index="data_exfil" sourcetype="http_logs"` this searches for the logs that were ingested into Splunk for this project. 
+Filter2: `index="data_exfil" sourcetype="http_logs" method=POST` 
+Filter3: `index="data_exfil" sourcetype="http_logs" method=POST | stats count avg(bytes_sent) max(bytes_sent) min(bytes_sent) by domain | sort - count`
+Filter4: `index="data_exfil" sourcetype="http_logs" method=POST bytes_sent > 600 | table _time src_ip uri domain dst_ip bytes_sent | sort - bytes_sent`
 
-<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/298c5dea94192c5308686fd1aacc7ed6799400be/Screenshot%202026-06-05%20at%2007.36.54.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/298c5dea94192c5308686fd1aacc7ed6799400be/Screenshot%202026-06-05%20at%2007.36.54.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/e5cc6ab5a20eaa6dc8c695bfe91f934d2e7522f5/Screenshot%202026-06-05%20at%2007.39.43.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+Step 2 - Check for suspicious network traffic in Wireshark
+
+Filter1: `http`
+Filter2: `http.request.method == "POST"`
+Filter3: `http.request.method == "POST" and frame.len > 500` This bring back POST requests and frames larger than 500, there was to much noise over 1600 packets displayed so to reduce this I increased the frame size to 750
+Filter4: `http.request.method == "POST" and frame.len > 750` This brought back one packet, after following the process of `packet - follow - HTTP stream` gave me the info on data that has been exfiltrated which is the (Internal Access Credentials - Finance Department)
+
+<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/298c5dea94192c5308686fd1aacc7ed6799400be/Screenshot%202026-06-05%20at%2007.36.54.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/e5cc6ab5a20eaa6dc8c695bfe91f934d2e7522f5/Screenshot%202026-06-05%20at%2007.39.43.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <h2>Findings</h2>
 
