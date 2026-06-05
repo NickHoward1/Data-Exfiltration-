@@ -249,7 +249,7 @@ Filter2: `index="data_exfil" sourcetype="http_logs" method=POST`
 Filter3: `index="data_exfil" sourcetype="http_logs" method=POST | stats count avg(bytes_sent) max(bytes_sent) min(bytes_sent) by domain | sort - count`
 Filter4: `index="data_exfil" sourcetype="http_logs" method=POST bytes_sent > 600 | table _time src_ip uri domain dst_ip bytes_sent | sort - bytes_sent`
 
-<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/298c5dea94192c5308686fd1aacc7ed6799400be/Screenshot%202026-06-05%20at%2007.36.54.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/e5cc6ab5a20eaa6dc8c695bfe91f934d2e7522f5/Screenshot%202026-06-05%20at%2007.39.43.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src= "https://github.com/NickHoward1/Data-Exfiltration-/blob/e1f45244c17ddd621f950c68866231baf10468dd/Screenshot%202026-06-05%20at%2008.35.53.png" width="300" height="300"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 
 Step 2 - Check for suspicious network traffic in Wireshark
 
